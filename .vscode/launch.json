@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "NbanexusApplication",
+            "request": "launch",
+            "mainClass": "github.nbanexus.NbanexusApplication",
+            "projectName": "nbanexus"
+        },
+        {
+            "type": "java",
+            "name": "BudgetballApplication",
+            "request": "launch",
+            "mainClass": "BudgetballApplication",
+            "projectName": "basketball"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BudgetballApplication<basketball>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "budget.ball.basketball.BudgetballApplication",
+            "projectName": "basketball",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
