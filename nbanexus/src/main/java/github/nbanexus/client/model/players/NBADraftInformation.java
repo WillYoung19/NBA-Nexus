@@ -18,4 +18,5 @@ public class NBADraftInformation {
   private int year;
   private int selection;
   private Object team;
+  private Object pick;
 }

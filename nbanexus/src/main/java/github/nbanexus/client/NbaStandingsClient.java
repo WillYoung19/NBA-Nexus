@@ -1,8 +1,5 @@
 package github.nbanexus.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,9 +9,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import github.nbanexus.client.model.players.NBAPlayer;
-import github.nbanexus.client.model.teams.NBATeam;
-import github.nbanexus.client.model.teams.TeamPlayers;
 import github.nbanexus.client.model.teams.standings.Standings;
 
 @Component

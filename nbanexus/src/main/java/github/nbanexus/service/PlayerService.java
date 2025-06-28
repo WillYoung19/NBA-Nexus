@@ -10,20 +10,21 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import github.nbanexus.client.NbaStandingsClient;
 import github.nbanexus.client.NbaTeamsClient;
 import github.nbanexus.client.model.players.NBAPlayer;
 import github.nbanexus.client.model.teams.NBATeam;
 import github.nbanexus.client.model.teams.TeamPlayers;
+import github.nbanexus.mapper.PlayerMapper;
 import github.nbanexus.model.Player;
+import github.nbanexus.model.PlayerBase;
+import github.nbanexus.model.PlayerSearch;
 import github.nbanexus.model.Team;
 
 @Service
 public class PlayerService {
 
-  @Autowired private NbaStandingsClient nbaStandingsClient;
   @Autowired private NbaTeamsClient nbaTeamsClient;
-
+  @Autowired private PlayerMapper playerMapper;
   @Autowired private ObjectMapper objectMapper;
 
   @Autowired
@@ -43,7 +44,7 @@ public class PlayerService {
     team.setSlug(nbaTeam.getSlug());
     team.setVenueName(nbaTeam.getVenue().getFullName());
     team.setPlayerNames(getPlayerNames(teamId).stream()
-        .map(player -> ((Player) player).getName())
+        .map(player -> ((Player) player).getDisplayName())
         .collect(Collectors.toList()));
     return team;
   }
@@ -51,21 +52,56 @@ public class PlayerService {
   public List<Player> getPlayerNames(String teamId) throws Exception {
     List<Player> players = new ArrayList<>();
     TeamPlayers teamPlayers = nbaTeamsClient.getNbaTeamPlayers(teamId);
-    System.out.println(teamPlayers);
     for (Object o : teamPlayers.getItems()) {
-      String url = o.toString().replace("{$ref=", "").replace("}", "");
-      NBAPlayer nbaPlayer = nbaTeamsClient.getTeamPlayers(url);
-      Player player = new Player();
-      player.setName(nbaPlayer.getDisplayName());
-      player.setHeight(nbaPlayer.getDisplayHeight());
-      player.setWeight(nbaPlayer.getDisplayWeight());
-      player.setAge(nbaPlayer.getAge());
-      player.setYearsPro(nbaPlayer.getExperience().toString());
-      player.setPosition(nbaPlayer.getPosition().getName());
-      players.add(player);
-      System.out.println(player);
+      String url = o.toString().replace("{$ref=", "").replace("?lang=en&region=us}", "");
+      NBAPlayer nbaPlayer = nbaTeamsClient.getTeamPlayer(url);
+      players.add(playerMapper.nbaPlayerToPlayer(nbaPlayer));
     }
+    getPlayerSearches(players);
     return players;
+  }
+
+  public List<String> getAllPlayers() throws Exception {
+    List<Player> players = new ArrayList<>();
+    List<String> playerBase = new ArrayList<>();
+    for(int i = 1; i <= 30; i++){
+    TeamPlayers teamPlayers = nbaTeamsClient.getNbaTeamPlayers(String.format("%d", i));
+    for (Object o : teamPlayers.getItems()) {
+      String url = o.toString().replace("{$ref=", "").replace("?lang=en&region=us}", "");
+      NBAPlayer nbaPlayer = nbaTeamsClient.getTeamPlayer(url);
+      players.add(playerMapper.nbaPlayerToPlayer(nbaPlayer));
+    }
+  }
+  playerBase = getPlayerSearches(players);
+    return playerBase;
+  }
+
+  List<String> getPlayerSearches(List<Player> players) {
+    List<String> list = new ArrayList<>();
+    for (Player player : players) {
+      PlayerSearch searchedPlayer = playerMapper.playerToPlayerSearch(player);
+      System.out.println(String.format("list.add(new PlayerSearch(%d, \"%s\", \"%s\"));", searchedPlayer.getId(), searchedPlayer.getFullName(), searchedPlayer.getDisplayName()));
+      list.add(String.format("list.add(new PlayerSearch(%d, \"%s\", \"%s\"));", searchedPlayer.getId(), searchedPlayer.getFullName(), searchedPlayer.getDisplayName()));
+    }
+    return list;
+  }
+
+  public Player getPlayerByName(String name) throws Exception{
+    name = name.strip();
+    PlayerBase playerBase = new PlayerBase();
+    for (PlayerSearch player : playerBase.getPlayerBase()) {
+      if(name.equalsIgnoreCase(player.getDisplayName().strip())) {
+        NBAPlayer nbaPlayer = nbaTeamsClient.getPlayer(String.format("%d", player.getId()));
+        return playerMapper.nbaPlayerToPlayer(nbaPlayer);
+      }
+    }
+    return null;
+  }
+
+  public NBAPlayer getPlayer(String playerId) throws Exception {
+    NBAPlayer nbaPlayer = nbaTeamsClient.getPlayer(playerId);
+    System.out.println(nbaPlayer);
+    return nbaPlayer;
   }
   
 }

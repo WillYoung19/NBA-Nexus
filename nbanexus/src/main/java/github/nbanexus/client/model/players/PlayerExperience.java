@@ -1,6 +1,5 @@
-package github.nbanexus.client.model.teams;
+package github.nbanexus.client.model.players;
 
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,10 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TeamPlayers {
-  private int count;
-  private int pageIndex;
-  private int pageSize;
-  private int pageCount;
-  private List<Object> items;
+public class PlayerExperience {
+  private int years;
 }

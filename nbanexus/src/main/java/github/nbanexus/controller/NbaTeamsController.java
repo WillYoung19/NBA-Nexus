@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import github.nbanexus.client.NbaStandingsClient;
+import github.nbanexus.client.model.players.NBAPlayer;
 import github.nbanexus.model.Player;
 import github.nbanexus.model.Team;
 import github.nbanexus.service.PlayerService;
@@ -39,5 +39,35 @@ public class NbaTeamsController {
   })
   public List<Player> getPlayersNamesForTeam(@PathVariable final String teamId) throws Exception {
     return service.getPlayerNames(teamId);
+  }
+
+  @GetMapping("/team/players/{playerId}")
+  @Operation(summary = "Get Player by Id", description = "Retrieve a players information")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successful response"),
+      @ApiResponse(responseCode = "404", description = "Not found")
+  })
+  public NBAPlayer getPlayer(@PathVariable final String playerId) throws Exception {
+    return service.getPlayer(playerId);
+  }
+
+  @GetMapping("/players")
+  @Operation(summary = "Get Player", description = "Retrieve a players information")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successful response"),
+      @ApiResponse(responseCode = "404", description = "Not found")
+  })
+  public List<String> getAllPlayers() throws Exception {
+    return service.getAllPlayers();
+  }
+
+  @GetMapping("/players/{playerName}")
+  @Operation(summary = "Get Player by Name", description = "Retrieve a players information")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Successful response"),
+      @ApiResponse(responseCode = "404", description = "Not found")
+  })
+  public Player getPlayerByName(@PathVariable final String playerName) throws Exception {
+    return service.getPlayerByName(playerName);
   }
 }

@@ -36,7 +36,12 @@ public class NbaTeamsClient {
     return objectMapper.convertValue(getClientResponse(url), TeamPlayers.class);
   }
 
-  public NBAPlayer getTeamPlayers(String url) throws Exception {
+  public NBAPlayer getTeamPlayer(String url) throws Exception {
+    return objectMapper.convertValue(getClientResponse(url), NBAPlayer.class);
+  }
+
+  public NBAPlayer getPlayer(String playerId) throws Exception {
+    String url = "http://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/seasons/2024/athletes/" + playerId;
     return objectMapper.convertValue(getClientResponse(url), NBAPlayer.class);
   }
 

@@ -13,10 +13,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Player {
-  private String name;
+  private long id;
+  private String fullName;
+  private String displayName;
+  private String shortName;
   private int age;
   private String height;
   private String weight;
-  private String yearsPro;
+  private int yearsPro;
   private String position;
 }

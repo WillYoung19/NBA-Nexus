@@ -41,7 +41,7 @@ public class NBAPlayer {
   private NBATeam team;
   private Object contract;
   private Object statistics;
-  private Object experience;
+  private PlayerExperience experience;
   private boolean active;
   private Object contracts;
   private NBADraftInformation draft;
